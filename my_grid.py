@@ -1,4 +1,4 @@
-from turtle import *
+import turtle
 from math import *
 
 
@@ -11,73 +11,73 @@ class Geom:
              arrow_size=1.5,
              shift_Oy=0,
              shift_Ox=0):
-        turtlesize(arrow_size)
+        turtle.turtlesize(arrow_size)
         n = max_val
         step_pixel = self.step
         maxx = max_val * step_pixel
         maxy = maxx
         shift_Oy = step_pixel * shift_Oy
         shift_Ox = step_pixel * shift_Ox
-        tracer(0)
+        turtle.tracer(0)
 
-        width(1)
-        color('#d0d0d0')
+        turtle.width(1)
+        turtle.color('#d0d0d0')
         # vertical axes
         for i in range(0, 2 * n + 1):
-            up()
+            turtle.up()
             x = i * self.step
-            goto(-maxx + x, -maxy)
-            down()
-            goto(-maxx + x, maxy)
+            turtle.goto(-maxx + x, -maxy)
+            turtle.down()
+            turtle.goto(-maxx + x, maxy)
 
         # horizontal axes
         for i in range(0, 2 * n + 1):
-            up()
+            turtle.up()
             y = i * self.step
-            goto(-maxx, -maxy + y)
-            down()
-            goto(maxx, -maxy + y)
+            turtle.goto(-maxx, -maxy + y)
+            turtle.down()
+            turtle.goto(maxx, -maxy + y)
 
         # axis y
-        color('black')
-        up()
-        width(2)
-        setheading(90)
-        goto(0 + shift_Oy, -maxy)
-        down()
-        goto(0 + shift_Oy, maxy)
-        stamp()
+        turtle.color('black')
+        turtle.up()
+        turtle.width(2)
+        turtle.setheading(90)
+        turtle.goto(0 + shift_Oy, -maxy)
+        turtle.down()
+        turtle.goto(0 + shift_Oy, maxy)
+        turtle.stamp()
 
         # axis x
-        color('black')
-        up()
-        width(2)
-        goto(-maxx, 0 + shift_Ox)
-        down()
-        goto(maxx, 0 + shift_Ox)
-        setheading(0)
-        stamp()
+        turtle.color('black')
+        turtle.up()
+        turtle.width(2)
+        turtle.goto(-maxx, 0 + shift_Ox)
+        turtle.down()
+        turtle.goto(maxx, 0 + shift_Ox)
+        turtle.setheading(0)
+        turtle.stamp()
 
-        update()
+        turtle.update()
 
     def add_point(self, x, y, xlabel_delta=None, ylabel_delta=None,
                   point_name=None, dot_size=10):
-        up()
-        goto(x * self.step, y * self.step)
-        dot(dot_size)
+        turtle.up()
+        turtle.goto(x * self.step, y * self.step)
+        turtle.dot(dot_size)
         if xlabel_delta is not None:
             if ylabel_delta is not None:
                 if point_name is not None:
-                    goto(xcor() + xlabel_delta, ycor() + ylabel_delta)
-                    write(point_name, font=('Arial', 24, 'normal'))
+                    turtle.goto(turtle.xcor() + xlabel_delta, turtle.ycor() + ylabel_delta)
+                    turtle.write(point_name, font=('Arial', 24, 'normal'))
 
     def add_line(self, x1, y1, x2, y2, vector=False):
-        tracer(0)
-        up()
-        goto(x1 * self.step, y1 * self.step)
-        down()
-        goto(x2 * self.step, y2 * self.step)
+        turtle.tracer(0)
+        turtle.up()
+        turtle.goto(x1 * self.step, y1 * self.step)
+        turtle.down()
+        turtle.goto(x2 * self.step, y2 * self.step)
         if vector:
-            setheading(atan2((y2 - y1), (x2 - x1)) / pi * 180)
-            stamp()
-        update()
+            turtle.setheading(atan2((y2 - y1), (x2 - x1)) / pi * 180)
+            turtle.stamp()
+        turtle.update()

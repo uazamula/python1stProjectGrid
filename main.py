@@ -13,7 +13,7 @@ from shape import *
 from turtle import *
 from my_grid import *
 from math import *
-screen = Screen()
+
 ht()
 step = 40
 w = Geom()
@@ -21,8 +21,8 @@ w.grid(max_val=10, shift_Oy=0, shift_Ox=0)
 
 # point A
 
-tracer(1)
-down()
+turtle.tracer(1)
+turtle.down()
 i = 0
 
 
@@ -40,7 +40,7 @@ def add_item():
     i += 1
 
 
-onkeypress(add_item)
-listen()
+turtle.onkeypress(add_item)
+turtle.listen()
 
-done()
+turtle.done()
