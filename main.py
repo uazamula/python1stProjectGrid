@@ -34,7 +34,7 @@ def add_item():
     elif i == 1:
         w.add_point(1, -2, 15, 0, 'O')
     elif i == 2:
-        w.add_line(5, 4, -3, -8, vector=True)
+        w.add_line(5, 4, -3, -8, 0,-25,'my_line',vector=True, lwidth=3)
     elif i == 3:
         w.add_point(-3, -8, -15, 5, 'A\'')
     i += 1

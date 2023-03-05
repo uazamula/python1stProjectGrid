@@ -60,18 +60,21 @@ class Geom:
 
         turtle.update()
 
-    def add_point(self, x, y, xlabel_delta=None, ylabel_delta=None,
-                  point_name=None, dot_size=10):
+    def add_point(self, x, y, xlabel_d=None, ylabel_d=None,
+                  point_name=None, dot_size=10, launched=None):
         turtle.up()
         turtle.goto(x * self.step, y * self.step)
         turtle.dot(dot_size)
-        if xlabel_delta is not None:
-            if ylabel_delta is not None:
+        if xlabel_d is not None:
+            if ylabel_d is not None:
                 if point_name is not None:
-                    turtle.goto(turtle.xcor() + xlabel_delta, turtle.ycor() + ylabel_delta)
+                    turtle.goto(turtle.xcor() + xlabel_d,
+                                turtle.ycor() + ylabel_d)
                     turtle.write(point_name, font=('Arial', 24, 'normal'))
 
-    def add_line(self, x1, y1, x2, y2, vector=False):
+    def add_line(self, x1, y1, x2, y2, xlabel_d=None, ylabel_d=None, label=None,
+                 vector=False, lwidth=2):
+        turtle.width(lwidth)
         turtle.tracer(0)
         turtle.up()
         turtle.goto(x1 * self.step, y1 * self.step)
@@ -80,4 +83,11 @@ class Geom:
         if vector:
             turtle.setheading(atan2((y2 - y1), (x2 - x1)) / pi * 180)
             turtle.stamp()
+        if xlabel_d is not None:
+            if ylabel_d is not None:
+                if label is not None:
+                    turtle.up()
+                    turtle.goto((x1+x2)/2* self.step + xlabel_d,
+                                (y1+y2)/2* self.step + ylabel_d)
+                    turtle.write(label, font=('Arial', 24, 'normal'))
         turtle.update()
