@@ -14,7 +14,7 @@ def add_item():
     global i
 
     if i == 0:
-        w.mlabel(2, 6, 'АB=(2,5)')
+        w.mlabel(2, 6, 'АB(2;5)')
     elif i == 1:
         w.mpoint(0, 0)
     elif i == 2:

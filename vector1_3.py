@@ -28,7 +28,7 @@ def add_item():
     elif i == 6:
         w.mline(1, 4, 5, 4)
     elif i == 7:
-        w.mlabel(2, 5, 'АB=(4,3)')
+        w.mlabel(2, 5, 'АB(4;3)')
     elif i == 8:
         w.mlabel(4, 5, '|АB|=5 (клітинок)')
     i += 1
