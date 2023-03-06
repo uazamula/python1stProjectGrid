@@ -17,7 +17,7 @@ from math import *
 ht()
 step = 40
 w = Geom()
-w.grid(max_val=10, shift_Oy=0, shift_Ox=0)
+w.grid(cells_num=10, shift_Oy=0, shift_Ox=0)
 
 # point A
 
@@ -30,13 +30,15 @@ def add_item():
     global i
 
     if i == 0:
-        w.add_point(5, 4)
+        w.mpoint(5, 4)
     elif i == 1:
-        w.add_point(1, -2, 15, 0, 'O')
+        w.mpoint(1, -2, 15, 0, 'O')
     elif i == 2:
-        w.add_line(5, 4, -3, -8, 0,-25,'my_line',vector=True, lwidth=3)
+        w.mline(5, 4, -3, -8, 0, -25, 'my_line', vector=True, lwidth=3)
     elif i == 3:
-        w.add_point(-3, -8, -15, 5, 'A\'')
+        w.mpoint(-3, -8, -15, 5, 'A\'')
+    elif i == 4:
+        w.mturtle(3, 7, )
     i += 1
 
 

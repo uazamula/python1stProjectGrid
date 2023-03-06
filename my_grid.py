@@ -4,20 +4,20 @@ from math import *
 
 class Geom:
 
-    def __init__(self, my_step=40):
+    def __init__(self, my_step=40, shift_Ox=0,
+                 shift_Oy=0):
         self.step = my_step
+        self.shift_Ox = shift_Ox * my_step
+        self.shift_Oy = shift_Oy * my_step
 
-    def grid(self, max_val=10,
+    def grid(self, cells_num=20,
              arrow_size=1.5,
-             shift_Oy=0,
-             shift_Ox=0):
+             ):
+        turtle.shape('classic')
         turtle.turtlesize(arrow_size)
-        n = max_val
-        step_pixel = self.step
-        maxx = max_val * step_pixel
+        n = cells_num//2
+        maxx = n * self.step
         maxy = maxx
-        shift_Oy = step_pixel * shift_Oy
-        shift_Ox = step_pixel * shift_Ox
         turtle.tracer(0)
 
         turtle.width(1)
@@ -43,27 +43,31 @@ class Geom:
         turtle.up()
         turtle.width(2)
         turtle.setheading(90)
-        turtle.goto(0 + shift_Oy, -maxy)
+        turtle.goto(0 + self.shift_Oy, -maxy)
         turtle.down()
-        turtle.goto(0 + shift_Oy, maxy)
+        turtle.goto(0 + self.shift_Oy, maxy)
         turtle.stamp()
 
         # axis x
         turtle.color('black')
         turtle.up()
         turtle.width(2)
-        turtle.goto(-maxx, 0 + shift_Ox)
+        turtle.goto(-maxx, 0 + self.shift_Ox)
         turtle.down()
-        turtle.goto(maxx, 0 + shift_Ox)
+        turtle.goto(maxx, 0 + self.shift_Ox)
         turtle.setheading(0)
         turtle.stamp()
 
         turtle.update()
 
-    def add_point(self, x, y, xlabel_d=None, ylabel_d=None,
-                  point_name=None, dot_size=10, launched=None):
+    def mpoint(self, x, y, xlabel_d=None, ylabel_d=None,
+               point_name=None, dot_size=10, launched=None):
+        turtle.ht()
         turtle.up()
-        turtle.goto(x * self.step, y * self.step)
+        turtle.color('black')
+
+        turtle.goto(x * self.step + self.shift_Oy,
+                    y * self.step + self.shift_Ox)
         turtle.dot(dot_size)
         if xlabel_d is not None:
             if ylabel_d is not None:
@@ -72,14 +76,42 @@ class Geom:
                                 turtle.ycor() + ylabel_d)
                     turtle.write(point_name, font=('Arial', 24, 'normal'))
 
-    def add_line(self, x1, y1, x2, y2, xlabel_d=None, ylabel_d=None, label=None,
-                 vector=False, lwidth=2):
+    def mlabel(self, x, y, name):
+        turtle.ht()
+        turtle.up()
+        turtle.color('black')
+        turtle.goto(x * self.step + self.shift_Oy,
+                    y * self.step + self.shift_Ox)
+        turtle.write(name, font=('Arial', 24, 'normal'))
+
+    def mturtle(self, x, y, shape=None, size=None):
+        turtle.ht()
+        turtle.up()
+        turtle.color('black')
+
+        turtle.goto(x * self.step + self.shift_Oy,
+                    y * self.step + self.shift_Ox)
+        turtle.turtlesize(1)
+        if shape is None:
+            turtle.shape('turtle')
+        else:
+            turtle.shape(shape)
+        turtle.stamp()
+
+    def mline(self, x1, y1, x2, y2, xlabel_d=None, ylabel_d=None, label=None,
+              vector=False, lwidth=2, color=None):
+        turtle.ht()
         turtle.width(lwidth)
+        turtle.turtlesize(1.5)
+        turtle.color('black') if color is None else turtle.color(color)
+        turtle.shape('classic')
         turtle.tracer(0)
         turtle.up()
-        turtle.goto(x1 * self.step, y1 * self.step)
+        turtle.goto(x1 * self.step + self.shift_Oy,
+                    y1 * self.step + self.shift_Ox)
         turtle.down()
-        turtle.goto(x2 * self.step, y2 * self.step)
+        turtle.goto(x2 * self.step + self.shift_Oy,
+                    y2 * self.step + self.shift_Ox)
         if vector:
             turtle.setheading(atan2((y2 - y1), (x2 - x1)) / pi * 180)
             turtle.stamp()
@@ -87,7 +119,8 @@ class Geom:
             if ylabel_d is not None:
                 if label is not None:
                     turtle.up()
-                    turtle.goto((x1+x2)/2* self.step + xlabel_d,
-                                (y1+y2)/2* self.step + ylabel_d)
+                    turtle.goto(
+                        (x1 + x2) / 2 * self.step + xlabel_d + self.shift_Oy,
+                        (y1 + y2) / 2 * self.step + ylabel_d + self.shift_Ox)
                     turtle.write(label, font=('Arial', 24, 'normal'))
         turtle.update()
