@@ -8,6 +8,7 @@ from alien import Alien
 
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 
 
@@ -28,6 +29,7 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
 
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -37,6 +39,7 @@ class AlienInvasion:
         self.play_button = Button(self, "Press p to play \nor click here")
 
     def run_game(self):
+
         while True:
             self._check_events()
             if self.stats.game_active:
@@ -67,6 +70,9 @@ class AlienInvasion:
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.stats.game_active = True
+        self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
         self.aliens.empty()
         self.bullets.empty()
 
@@ -111,12 +117,20 @@ class AlienInvasion:
         # print(len(self.bullets))
 
     def _check_bullet_alien_collision(self):
-        collision = pygame.sprite.groupcollide(self.bullets, self.aliens, True,
-                                               True)
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True,
+                                                True)
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
+            self.sb.check_high_score()
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            self.stats.level+=1
+            self.sb.prep_level()
 
     def _update_aliens(self):
         self._check_fleet_edges()
@@ -129,6 +143,7 @@ class AlienInvasion:
     def _ship_hit(self):
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
             self.aliens.empty()
             self.bullets.empty()
 
@@ -156,7 +171,7 @@ class AlienInvasion:
         ship_height = self.ship.rect.height
         available_space_y = (self.settings.screen_height - 3 * alien_height -
                              ship_height)
-        number_rows = available_space_y // (2 * alien_height)
+        number_rows = available_space_y // (2 * alien_height) - 1
 
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
@@ -169,7 +184,7 @@ class AlienInvasion:
         alien_width, alien_height = alien.rect.size
         alien.x = alien_width + 2 * alien_width * alien_number
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+        alien.rect.y = (1+1)*alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
     def _check_fleet_edges(self):
@@ -190,6 +205,8 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
 
+        self.sb.show_score()
+
         if not self.stats.game_active:
             self.play_button.draw_button()
 
@@ -197,5 +214,6 @@ class AlienInvasion:
 
 
 if __name__ == '__main__':
+
     ai = AlienInvasion()
     ai.run_game()
