@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+from random import randint
 
 
 def display_score():
@@ -9,6 +10,29 @@ def display_score():
     score_rect = score_surf.get_rect(center=(400, 50))
     screen.blit(score_surf, score_rect)
     return current_time
+
+
+def obstacle_movement(obstacle_list):
+    if obstacle_list:
+        for obstacle_rect in obstacle_list:
+            obstacle_rect.x -= 5
+            if obstacle_rect.bottom == HEDGEHOG_L_BOTTOM:
+                screen.blit(snail_surf, obstacle_rect)
+            else:
+                screen.blit(hedgehog_d_surf, obstacle_rect)
+
+            obstacle_list = [obstacle for obstacle in obstacle_list if
+                             obstacle.x > 0]
+        return obstacle_list
+    else:
+        return []
+
+
+def collisions(player, obstacles):
+    if obstacles:
+        for obstacle_rect in obstacles:
+            if player.colliderect(obstacle_rect): return False
+    return True
 
 
 pygame.init()
@@ -35,19 +59,33 @@ ground_rect = ground_surface.get_rect(
 score_surf = test_font.render('My game', False, (64, 64, 64))
 score_rect = score_surf.get_rect(center=(400, 50))
 
-snail_surface = pygame.image.load('graphics/hedgehog_l.png').convert_alpha()
+# Obstacles
+snail_surf = pygame.image.load('graphics/hedgehog_l.png').convert_alpha()
 
-hh_width = snail_surface.get_rect().width // 4
-hh_height = snail_surface.get_rect().height // 4
-snail_surface = pygame.transform.scale(snail_surface, (
+hh_width = snail_surf.get_rect().width // 4
+hh_height = snail_surf.get_rect().height // 4
+snail_surf = pygame.transform.scale(snail_surf, (
     hh_width, hh_height))
+
+obstacle_surf = snail_surf
+HEDGEHOG_L_BOTTOM = screen_height - 10
+HEDGEHOG_D_BOTTOM = HEDGEHOG_L_BOTTOM - 5
 ground_x, ground_y = ground_surface.get_rect().bottomright
-snail_rect = snail_surface.get_rect(
-    bottomright=(screen_width - 10, screen_height - 10))
+snail_rect = snail_surf.get_rect(
+    bottomright=(screen_width - 10, HEDGEHOG_L_BOTTOM))
+
+hedgehog_d_surf = pygame.image.load('graphics/hedgehog_d.png').convert_alpha()
+hedgehog_d_surf = pygame.transform.rotozoom(hedgehog_d_surf, 0, 0.25)
+hedgehog_d_rect = hedgehog_d_surf.get_rect(
+    bottomright=(screen_width - 10, HEDGEHOG_D_BOTTOM))
+obstacle_rect_list = []
+
 MAX_X = 600
 snail_x_pos = MAX_X
 player_surf = pygame.image.load('graphics/ballerina_a.png').convert_alpha()
+
 player_rect = player_surf.get_rect(midbottom=(screen_width // 2, screen_height))
+
 player_gravity = -0
 
 player_stand = pygame.image.load('graphics/ballerina_b.png').convert_alpha()
@@ -59,6 +97,8 @@ game_name_rect = game_name.get_rect(center=(400, 25))
 game_message = test_font.render('Press space to run', False, (64, 64, 64))
 game_message_rect = game_message.get_rect(center=(400, 325))
 
+obstacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obstacle_timer, 1400)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -88,6 +128,18 @@ while True:
         #     print('keyup')
         #     if event.key == pygame.K_SPACE:
         #         player_gravity=0
+        if event.type == obstacle_timer and game_active:
+            if randint(0, 2):
+                obstacle_rect_list.append(snail_surf.get_rect(
+                    bottomright=(
+                        randint(screen_width + 100, screen_width + 300),
+                        HEDGEHOG_L_BOTTOM)))
+            else:
+                obstacle_rect_list.append(hedgehog_d_surf.get_rect(
+                    bottomright=(
+                        randint(screen_width + 100, screen_width + 300),
+                        HEDGEHOG_D_BOTTOM)))
+
     if game_active:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, ground_rect)
@@ -106,11 +158,12 @@ while True:
         #     snail_x_pos = MAX_X
 
         # screen.blit(snail_surface, (snail_x_pos, 300))
-        snail_rect.x -= 6
-        if snail_rect.x <= -hh_width + 10:
-            snail_rect.x = screen_width
 
-        screen.blit(snail_surface, snail_rect)
+        # snail_rect.x -= 6
+        # if snail_rect.x <= -hh_width + 10:
+        #     snail_rect.x = screen_width
+
+        screen.blit(snail_surf, snail_rect)
 
         player_gravity += 1
         player_rect.y += player_gravity
@@ -118,6 +171,10 @@ while True:
             player_rect.bottom = ground_rect.bottom
 
         screen.blit(player_surf, player_rect)
+
+        # Obstacle movement
+        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+        game_active = collisions(player_rect,obstacle_rect_list)
 
         # keys = pygame.key.get_pressed()
         # print(keys[pygame.K_SPACE])
@@ -132,15 +189,18 @@ while True:
     else:
         screen.fill((94, 129, 162))
         screen.blit(player_stand, player_stand_rect)
+        obstacle_rect_list.clear()
+        player_rect.midbottom=(80,300)
+        player_gravity=0
 
         score_message = test_font.render(f'Your score: {score}', False,
                                          (63, 63, 63))
-        score_message_rect = score_message.get_rect(center=(400,330))
+        score_message_rect = score_message.get_rect(center=(400, 330))
         screen.blit(game_name, game_name_rect)
-        if score==0:
+        if score == 0:
             screen.blit(game_message, game_message_rect)
         else:
-            screen.blit(score_message,score_message_rect)
+            screen.blit(score_message, score_message_rect)
 
     pygame.display.update()
     clock.tick(60)  # the ceiling of framerate
