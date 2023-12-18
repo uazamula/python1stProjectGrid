@@ -35,6 +35,17 @@ def collisions(player, obstacles):
     return True
 
 
+def player_animation():
+    global player_surf, player_index
+    if player_rect.bottom < HEDGEHOG_L_BOTTOM:
+        player_surf = player_jump
+    else:
+        player_index += 0.08
+        if player_index >= len(player_walk):
+            player_index = 0
+        player_surf = player_walk[int(player_index)]
+
+
 pygame.init()
 screen_width = 800
 screen_height = 400
@@ -82,7 +93,13 @@ obstacle_rect_list = []
 
 MAX_X = 600
 snail_x_pos = MAX_X
-player_surf = pygame.image.load('graphics/ballerina_a.png').convert_alpha()
+player_walk1 = pygame.image.load('graphics/ballerina_a.png').convert_alpha()
+player_walk2 = pygame.image.load('graphics/ballerina_d.png').convert_alpha()
+player_walk = [player_walk1, player_walk2]
+player_index = 0
+player_surf = player_walk[player_index]
+
+player_jump = pygame.image.load('graphics/ballerina_b.png').convert_alpha()
 
 player_rect = player_surf.get_rect(midbottom=(screen_width // 2, screen_height))
 
@@ -170,11 +187,13 @@ while True:
         if player_rect.bottom >= ground_rect.bottom:
             player_rect.bottom = ground_rect.bottom
 
+        player_animation()
+
         screen.blit(player_surf, player_rect)
 
         # Obstacle movement
         obstacle_rect_list = obstacle_movement(obstacle_rect_list)
-        game_active = collisions(player_rect,obstacle_rect_list)
+        game_active = collisions(player_rect, obstacle_rect_list)
 
         # keys = pygame.key.get_pressed()
         # print(keys[pygame.K_SPACE])
@@ -190,8 +209,8 @@ while True:
         screen.fill((94, 129, 162))
         screen.blit(player_stand, player_stand_rect)
         obstacle_rect_list.clear()
-        player_rect.midbottom=(80,300)
-        player_gravity=0
+        player_rect.midbottom = (80, 300)
+        player_gravity = 0
 
         score_message = test_font.render(f'Your score: {score}', False,
                                          (63, 63, 63))
