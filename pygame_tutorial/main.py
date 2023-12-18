@@ -65,30 +65,35 @@ ground_surface = pygame.image.load('graphics/grass.png').convert_alpha()
 ground_surface = pygame.transform.scale(ground_surface, (screen_width, 193))
 ground_rect = ground_surface.get_rect(
     midbottom=(screen_width // 2, screen_height))
-# test_surface = pygame.image.load()
 
 score_surf = test_font.render('My game', False, (64, 64, 64))
 score_rect = score_surf.get_rect(center=(400, 50))
 
 # Obstacles
-snail_surf = pygame.image.load('graphics/hedgehog_l.png').convert_alpha()
+snail_frame1 = pygame.image.load('graphics/hedgehog_l.png').convert_alpha()
+snail_frame2 = pygame.image.load('graphics/hedgehog_r.png').convert_alpha()
 
-hh_width = snail_surf.get_rect().width // 4
-hh_height = snail_surf.get_rect().height // 4
-snail_surf = pygame.transform.scale(snail_surf, (
-    hh_width, hh_height))
+snail_frame1 = pygame.transform.rotozoom(snail_frame1, 0, 0.25)
+snail_frame2 = pygame.transform.rotozoom(snail_frame2, 0, 0.25)
+snail_frames = [snail_frame1, snail_frame2]
+snail_frame_index = 0
 
-obstacle_surf = snail_surf
+snail_surf = snail_frames[snail_frame_index]
+
 HEDGEHOG_L_BOTTOM = screen_height - 10
 HEDGEHOG_D_BOTTOM = HEDGEHOG_L_BOTTOM - 5
-ground_x, ground_y = ground_surface.get_rect().bottomright
-snail_rect = snail_surf.get_rect(
-    bottomright=(screen_width - 10, HEDGEHOG_L_BOTTOM))
 
-hedgehog_d_surf = pygame.image.load('graphics/hedgehog_d.png').convert_alpha()
-hedgehog_d_surf = pygame.transform.rotozoom(hedgehog_d_surf, 0, 0.25)
-hedgehog_d_rect = hedgehog_d_surf.get_rect(
-    bottomright=(screen_width - 10, HEDGEHOG_D_BOTTOM))
+hedgehog_vert_1 = pygame.image.load('graphics/hedgehog_d.png').convert_alpha()
+hedgehog_vert_2 = pygame.image.load('graphics/hedgehog.png').convert_alpha()
+
+hedgehog_vert_1 = pygame.transform.rotozoom(hedgehog_vert_1, 0, 0.25)
+hedgehog_vert_2 = pygame.transform.rotozoom(hedgehog_vert_2, 0, 0.25)
+
+fly_frames = [hedgehog_vert_1, hedgehog_vert_2]
+fly_frame_index = 0
+
+hedgehog_d_surf = fly_frames[fly_frame_index]
+
 obstacle_rect_list = []
 
 MAX_X = 600
@@ -116,6 +121,13 @@ game_message_rect = game_message.get_rect(center=(400, 325))
 
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer, 1400)
+
+snail_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(snail_animation_timer, 500)
+
+fly_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(fly_animation_timer, 300)
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -137,50 +149,38 @@ while True:
                     player_gravity = -20
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                snail_rect.x = ground_rect.bottomright[0]
+                # snail_rect.x = ground_rect.bottomright[0]
                 game_active = True
                 start_time = pygame.time.get_ticks() // 1000
 
-        # if event.type == pygame.KEYUP:
-        #     print('keyup')
-        #     if event.key == pygame.K_SPACE:
-        #         player_gravity=0
-        if event.type == obstacle_timer and game_active:
-            if randint(0, 2):
-                obstacle_rect_list.append(snail_surf.get_rect(
-                    bottomright=(
-                        randint(screen_width + 100, screen_width + 300),
-                        HEDGEHOG_L_BOTTOM)))
-            else:
-                obstacle_rect_list.append(hedgehog_d_surf.get_rect(
-                    bottomright=(
-                        randint(screen_width + 100, screen_width + 300),
-                        HEDGEHOG_D_BOTTOM)))
+        if game_active:
+            if event.type == obstacle_timer:
+                if randint(0, 2):
+                    obstacle_rect_list.append(snail_surf.get_rect(
+                        bottomright=(
+                            randint(screen_width + 100, screen_width + 300),
+                            HEDGEHOG_L_BOTTOM)))
+                else:
+                    obstacle_rect_list.append(hedgehog_d_surf.get_rect(
+                        bottomright=(
+                            randint(screen_width + 100, screen_width + 300),
+                            HEDGEHOG_D_BOTTOM)))
+            if event.type == snail_animation_timer:
+                if snail_frame_index == 0: snail_frame_index=1
+                else: snail_frame_index=0
+                snail_surf = snail_frames[snail_frame_index]
+            if event.type == fly_animation_timer:
+                if fly_frame_index == 0: fly_frame_index=1
+                else: fly_frame_index=0
+                hedgehog_d_surf = fly_frames[fly_frame_index]
+
 
     if game_active:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, ground_rect)
         score = display_score()
-        # pygame.draw.rect(screen, '#d0c8fc', score_rect, 10, 5)
-        # pygame.draw.line(screen, 'Green', (0, 0), pygame.mouse.get_pos(), 5)
-        # pygame.draw.ellipse(screen, 'Brown', pygame.Rect(50, 200, 100, 150))
-        # pygame.draw.rect(screen,'Pink', score_rect,36)
 
         screen.blit(test_surface1, (50, 50))
-
-        # screen.blit(score_surf, score_rect)
-
-        # snail_x_pos -= 2
-        # if snail_x_pos <= -hh_width + 10:
-        #     snail_x_pos = MAX_X
-
-        # screen.blit(snail_surface, (snail_x_pos, 300))
-
-        # snail_rect.x -= 6
-        # if snail_rect.x <= -hh_width + 10:
-        #     snail_rect.x = screen_width
-
-        screen.blit(snail_surf, snail_rect)
 
         player_gravity += 1
         player_rect.y += player_gravity
@@ -195,16 +195,8 @@ while True:
         obstacle_rect_list = obstacle_movement(obstacle_rect_list)
         game_active = collisions(player_rect, obstacle_rect_list)
 
-        # keys = pygame.key.get_pressed()
-        # print(keys[pygame.K_SPACE])
-
-        if player_rect.colliderect(snail_rect):
-            game_active = False
-            print('collision player with hedgehog')
         mouse_pos = pygame.mouse.get_pos()
-        # if player_rect.collidepoint(mouse_pos):
-        #     print('collision pl vs mouse')
-        #     print(pygame.mouse.get_pressed())
+
     else:
         screen.fill((94, 129, 162))
         screen.blit(player_stand, player_stand_rect)
