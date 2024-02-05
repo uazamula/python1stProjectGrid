@@ -33,12 +33,15 @@
 # У випадку мату у першому рядку виведіть «Checkmate», а в наступних рядках виведіть клітинки всіх фігур, що завдають шах у довільному порядку.
 # У випадку пату у першому рядку виведіть «Stalemate».
 # В іншому випадку виведіть «Continue» та у довільному порядку всі клітинки, у які король може зробити хід.
+no_king = None
+
+
 def pos_of_king(K, chess):
     for i in range(8):
         for j in range(8):
             if chess[i][j] == K:
                 return (i, j)
-    return None
+    return no_king
 
 
 def game():
@@ -47,18 +50,19 @@ def game():
     p = 'pawn'
     r = 'rook'
     b = 'bishop'
-    chess = [[e, e, b, e, e, e, b, e, ],
-             [e, e, e, e, p, b, e, e, ],
-             [e, e, e, p, K, e, e, e, ],
-             [e, e, e, p, e, e, e, e, ],
-             [e, e, b, e, e, e, r, e, ],
-             [e, e, e, e, e, e, e, b, ],
-             [e, e, e, e, r, e, e, e, ],
+    n = 'knight'
+    chess = [[e, e, e, n, e, n, e, e, ],
+             [e, e, n, e, e, n, n, e, ],
+             [e, n, e, e, K, n, e, e, ],
+             [e, e, n, e, e, e, n, e, ],
+             [e, e, e, n, n, n, n, e, ],
+             [e, e, e, e, e, e, e, e, ],
+             [e, e, e, e, e, e, e, e, ],
              [e, e, e, e, e, e, e, e, ], ]
 
     check = []
     k_pos = pos_of_king(K, chess)
-    if k_pos is None:
+    if k_pos is no_king:
         print('Where is the King?')
         return
     for i in range(8):
@@ -86,16 +90,20 @@ def game():
                 if chess[i][j] == b:
                     if abs(k_pos[0] - i) == abs(k_pos[1] - j):
                         check.append([i, j])
-                        for k in range(1,abs(k_pos[0] - i)):
+                        for k in range(1, abs(k_pos[0] - i)):
                             add_i = round(
                                 k * (k_pos[0] - i) / abs(k_pos[0] - i))
                             add_j = round(
                                 k * (k_pos[1] - j) / abs(k_pos[1] - j))
-                            print(k, i,j)
-                            print(add_i,add_j)
+                            print(k, i, j)
+                            print(add_i, add_j)
                             if chess[i + add_i][j + add_j] != e:
                                 check.pop()
                                 break
+                if chess[i][j] == n:
+                    if abs(k_pos[0] - i) == 1 and abs(k_pos[1] - j) == 2 or \
+                       abs(k_pos[0] - i) == 2 and abs(k_pos[1] - j) == 1:
+                        check.append([i, j])
 
     print(check)
 
