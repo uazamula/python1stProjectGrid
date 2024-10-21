@@ -3,37 +3,42 @@
 # Щоб компенсувати цю несправедливість життя, кожен раз як учасник повністю вирішує набір задач, то він одразу наливає собі святковий келих "хербатки" (від пол. herbata, чай) та завдяки ньому відновлює свою ефективність до максимуму, а відлік години починається спочатку. Зверніть увагу, що якщо в цей момент мало відбутись зниження ефективності, то воно не відбувається. Переможцем змагання стає учасник, що розв'язав найбільшу кількість задач.
 # Петрик послухав це все і вирішив зробити ставку на переможця. Допоможіть, будь ласка, Петрику визначитись, хто стане переможцем змагання, та, який буде фінальний рахунок вирішених задач, якщо обидва учасники хочуть перемогти.
 
-n = 3
-m = 2
-lista = [4, 8,3]
-listb = [4, 2]
-e = 5
+#n,m = 3, 2
+#lista = [4, 8,3]
+#listb = [4, 2]
+#e = 5
 
+n,m = map(int,input().split())
+lista = list(map(int,input().split()))
+listb = list(map(int,input().split()))
+e = int(input())
 
 def solved_tasks(e, lists):
     di_tasks = 0
-    e_current = e
     for tasks in lists:
-        while tasks > 0 and e_current > 0:
-            di_tasks += min(e_current, tasks)
-            tasks -= e_current
-            e_current -= 1
-            # print(di_tasks, e_current, tasks)
+        e_current = e
+        if (1+e)*e/2>=tasks:
+            di_tasks+=tasks
+        else:
+            while tasks > 0 and e_current > 0:
+                di_tasks += min(e_current, tasks)
+                tasks -= e_current
+                e_current -= 1
+                # print(di_tasks, e_current, tasks)
         if e_current == 0 and tasks > 0:
             break
-        else:
-            e_current = e
     return di_tasks
-
-if solved_tasks(e, lista) > solved_tasks(e, listb):
+danya_tasks = solved_tasks(e, lista)
+diana_tasks = solved_tasks(e, listb)
+if danya_tasks > diana_tasks:
     print('Danya')
-    print(f'{solved_tasks(e, lista)}:{solved_tasks(e, listb)}')
-elif solved_tasks(e, lista) < solved_tasks(e, listb):
+    print(f'{danya_tasks}:{diana_tasks}')
+elif danya_tasks < diana_tasks:
     print('Diana')
-    print(f'{solved_tasks(e, listb)}:{solved_tasks(e, lista)}')
+    print(f'{diana_tasks}:{danya_tasks}')
 else:
     print('Draw')
-    print(f'{solved_tasks(e, listb)}:{solved_tasks(e, lista)}')
+    print(f'{diana_tasks}:{danya_tasks}')
 
-print(solved_tasks(e, lista))
-print(solved_tasks(e, listb))
+#print(solved_tasks(e, lista))
+#print(solved_tasks(e, listb))

@@ -51,15 +51,13 @@ r = 'r'
 b = 'b'
 n = 'n'
 Q = 'Q'
-chess = [[e, e, e, n, e, n, e, e, ],
-         [e, e, n, e, e, r, n, b, ],
-         [e, n, e, e, r, e, n, e, ],
-         [e, e, n, e, e, e, n, e, ],
-         [e, e, e, n, n, n, n, e, ],
-         [e, r, b, e, Q, e, e, n, ],
-         [e, e, e, e, e, e, e, e, ],
-         [e, p, e, e, e, K, e, e, ], ]
+chess = [[], [], [], [], [], [], [], []]
+mapletters = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
+mapnumbers = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1}
+for i in range(8):
+    chess[i] = list(input())
 
+# print(chess)
 chess_old = [[el for el in line] for line in chess]  # copy.deepcopy(chess)
 check = []
 
@@ -77,7 +75,7 @@ def game():
                 # pawn
                 if chess[i][j] == p:
                     if k_pos[0] == i - 1 and abs(k_pos[1] - j) == 1:
-                        print()
+                        #                        print()
                         check.append([i, j])
                 # rook, Queen
                 if chess[i][j] == r or chess[i][j] == Q:
@@ -94,7 +92,7 @@ def game():
                                 check.pop()
                                 break
                 # bishop, Queen
-                if chess[i][j] in [b,Q]:
+                if chess[i][j] in [b, Q]:
                     if abs(k_pos[0] - i) == abs(k_pos[1] - j):
                         check.append([i, j])
                         for k in range(1, abs(k_pos[0] - i)):
@@ -102,18 +100,19 @@ def game():
                                 k * (k_pos[0] - i) / abs(k_pos[0] - i))
                             add_j = round(
                                 k * (k_pos[1] - j) / abs(k_pos[1] - j))
-                            print(k, i, j)
-                            print(add_i, add_j)
+                            #                            print(k, i, j)
+                            #                            print(add_i, add_j)
                             if chess[i + add_i][j + add_j] != e:
                                 check.pop()
                                 break
-                #knight
+                # knight
                 if chess[i][j] == n:
                     if abs(k_pos[0] - i) == 1 and abs(k_pos[1] - j) == 2 or \
                             abs(k_pos[0] - i) == 2 and abs(k_pos[1] - j) == 1:
                         check.append([i, j])
 
-    print(check)
+
+#    print(check)
 
 
 def get_movement(border_condition, addx, addy):
@@ -125,12 +124,12 @@ def get_movement(border_condition, addx, addy):
         chess[old_k_pos[0]][old_k_pos[1]] = e
         chess[k_pos[0]][k_pos[1]] = K
         game()
-        for i in range(8):
-            print(chess[i])
-        print(check)
+        #        for i in range(8):
+        #            print(chess[i])
+        #        print(check)
         if not check:
-            movement_to.append([k_pos[0], k_pos[1]])
-        print(movement_to)
+            movement_to.append([mapletters[k_pos[1]], mapnumbers[k_pos[0]]])
+        #        print(movement_to)
         k_pos = (old_k_pos[0], old_k_pos[1])
         for i in range(8):
             for j in range(8):
@@ -140,13 +139,13 @@ def get_movement(border_condition, addx, addy):
 game()
 checkmate_maybe = copy.deepcopy(check)
 old_k_pos = (k_pos[0], k_pos[1])
-print(chess_old)
+# print(chess_old)
 
 get_movement(old_k_pos[0] > 0, -1, 0)
 # chess = list(chess_old)
-print(chess_old)
+# print(chess_old)
 get_movement(old_k_pos[1] > 0, 0, -1)
-print(checkmate_maybe)
+# print(checkmate_maybe)
 get_movement(old_k_pos[0] > 0 and old_k_pos[1] > 0, -1, -1)
 get_movement(old_k_pos[0] < len(chess) - 1 and old_k_pos[1] > 0, 1, -1)
 get_movement(old_k_pos[0] < len(chess) - 1, 1, 0)
@@ -156,9 +155,17 @@ get_movement(old_k_pos[1] < len(chess[0]) - 1, 0, 1)
 get_movement(old_k_pos[0] > 0 and old_k_pos[1] < len(chess[0]) - 1, -1, 1)
 if movement_to:
     print('Continue')
-    print(movement_to)
+    for row in movement_to:
+        print(row[0], row[1], sep='')
 if not checkmate_maybe and not movement_to:
     print('Stalemate')
 if checkmate_maybe and not movement_to:
     print('Checkmate')
-    print(checkmate_maybe)
+
+    checkmatefrom = [[] for i in checkmate_maybe]
+    i = 0
+    for check in checkmate_maybe:
+        checkmatefrom[i] = [mapletters[check[1]], mapnumbers[check[0]]]
+        print(checkmatefrom[i][0], checkmatefrom[i][1], sep='')
+        i += 1
+
