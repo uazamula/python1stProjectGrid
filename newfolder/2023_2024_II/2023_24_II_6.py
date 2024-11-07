@@ -23,7 +23,7 @@ for i in range(n):
 
 remain=[]
 buy=[[0 for i in range(m)] for j in range(n)]
-colors= [i for i in range(n)]
+colors= {i for i in range(n)}
 r=0
 for i in range(k):
     if tshorts[wanted[i][0]-1][wanted[i][1]]>0:
