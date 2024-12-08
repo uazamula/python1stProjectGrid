@@ -1,3 +1,6 @@
+# B (183) Нова Пошта
+# Всеукраїнська олімпіада з інформатики ІІІ етап День 1 2022-2023 н.р.
+# https://uoi.eolymp.space/uk/problems/183
 m = list(map(int, input().split()))
 M1, M2 = map(int, input().split())
 summ = sum(m)
