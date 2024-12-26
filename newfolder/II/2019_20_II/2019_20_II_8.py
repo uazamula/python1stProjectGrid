@@ -1,3 +1,5 @@
+# UOI 2022. II stage. Kyiv ?
+
 # https://www.kievoi.ippo.kubg.edu.ua/kievoi/1-2/2021.pdf
 # H. Квадрати
 # Ліміт на час виконання 2 секунди

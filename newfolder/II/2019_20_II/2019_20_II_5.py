@@ -1,4 +1,6 @@
 # E. Стрічка
+# UOI 2022. II stage. Kyiv ?
+
 # Ліміт на час виконання 1 секунда
 # Ліміт використання пам'яті 256 мегабайтів
 # 50 спроб відправити цю задачу
@@ -24,7 +26,7 @@ s=0
 i=1
 is_forbid=False
 while i<len(arr):
-    if arr[i-1]!=arr[i]:
+    if arr[i-1]!=arr[i]and  not is_forbid:
         s+=1
         is_forbid=True
     else:
