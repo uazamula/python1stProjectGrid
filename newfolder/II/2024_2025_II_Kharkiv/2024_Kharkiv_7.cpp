@@ -1,4 +1,6 @@
 // згенeровано в ChatGPT на основі коду на Python
+// пройшло всі 100% тестів на eolymp з максимальним часом 6 мс,
+// тобто в 50 разів швидше, ніж код з такою ж структурою на Python
 #include <iostream>
 #include <vector>
 #include <string>
