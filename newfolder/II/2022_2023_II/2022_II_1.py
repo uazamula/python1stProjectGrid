@@ -2,6 +2,7 @@
 # Всеукраїнська олімпіада з інформатики ІІ етап 2022-2023 н.р.
 
 # https://uoi.eolymp.space/uk/problems/1
+# https://oi.in.ua/wp-content/uploads/2022/12/U8WVYuD4GHItSKNoRZjIUIPgavACGK.pdf - умови
 # https://www.kievoi.ippo.kubg.edu.ua/kievoi/1-2/2022i.pdf (розбір)
 
 # В Аліси зараз a гривень. Вона пам'ятає, що Петрик винен їй b гривень,

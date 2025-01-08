@@ -1,8 +1,8 @@
 # G (358) Квадрати
 # Всеукраїнська олімпіада з інформатики ІІ етап (Kharkiv) 2024-2025 н.р.
 # https://uoi.eolymp.space/uk/problems/358
-
-# https://www.youtube.com/watch?v=QOVWCRvo4dE (лише A-F)
+# https://www.kievoi.ippo.kubg.edu.ua/kievoi/1-2/2024.pdf умова
+# https://www.youtube.com/watch?v=QOVWCRvo4dE розбір (лише A-F)
 
 
 # 65% (перевищено ліміт часу - 0,2 с) на eolymp

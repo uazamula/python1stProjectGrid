@@ -1,3 +1,9 @@
+# H (245) Підберіть кольори
+# Всеукраїнська олімпіада з інформатики ІІ етап 2023-2024 н.р.
+# https://uoi.eolymp.space/uk/problems/245
+# https://www.kievoi.ippo.kubg.edu.ua/kievoi/1-2/2023.pdf
+# https://oi.in.ua/wp-content/uploads/2023/12/gstdnnklefqyulnnsumu.pdf розбір
+# 100%
 n, m = map(int, input().split())
 ai = list(map(int, input().split()))
 arr = [[ai[i], 1] for i in range(n)]

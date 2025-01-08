@@ -33,6 +33,8 @@
 # 273
 # Відповідь #2++
 # 9
+
+# 92% completed
 def cells(k):
     return round(k * (k + 1) * k / 2 - (k - 1) * k * (2 * k - 1) / 6 + k - 1)
 

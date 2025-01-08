@@ -1,3 +1,9 @@
+# H(68) Тура, але уже складніша
+# Всеукраїнська олімпіада з інформатики ІІ етап 2021-2022 н.р.
+
+# https://uoi.eolymp.space/uk/problems/68
+# https://archive.uoi.ua/static/uoi-2-22-1-tutorials.pdf розбір
+
 import time
 
 n, m, k = map(int, input().split())
