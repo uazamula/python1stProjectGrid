@@ -3,9 +3,7 @@
 
 # https://uoi.eolymp.space/uk/problems/68
 # https://archive.uoi.ua/static/uoi-2-22-1-tutorials.pdf розбір
-
-import time
-
+# 100%
 n, m, k = map(int, input().split())
 coord = [i for i in range(k)]
 nearest_vert = -1
@@ -25,14 +23,10 @@ for i in range(k):
         coord_j_in_lastrow.append(coord[i][1])
 if nearest_vert > 0:
     for i in range(0, nearest_vert):
-        if i not in coord_i_in_col0:
-            coord.append((i, 0))
+        coord.append((i, 0))
 if nearest_horiz < m:
     for i in range(nearest_horiz + 1, m):
-        if i not in coord_j_in_lastrow:
-            coord.append((n - 1, i))
-
-sum = m * n - 1
+        coord.append((n - 1, i))
 
 ROW, COL = 0, 1
 most_left_index = m
@@ -52,23 +46,43 @@ def nearest_to_edge(key, value, most_remote_index):
             most_nearest_figures[elem[key]] = elem[value]
     return most_nearest_figures
 
-
 most_left_figures = nearest_to_edge(ROW, COL,
                                     most_left_index)  # row_num:col_num
 most_bottom_figures = nearest_to_edge(COL, ROW,
                                       most_bottom_index)  # col_num:row_num
 
-most_left_figures_list = [[key, value] for key, value in
-                          most_left_figures.items()]
+most_left_figures_list = [[] for i in range(m)]
+for i in range(n):
+    if i in most_left_figures:
+        most_left_figures_list[most_left_figures[i]].append(i)
+T = [0 for i in range(n)]
+shadowed_cells = 0
 
-start = time.time()
-for key, value in most_bottom_figures.items():
-    substr = len([0 for key2, value2 in most_left_figures.items() if
-                  key2 < value and value2 < key])
-    sum -= substr
-print(f'time={time.time() - start}')
+
+def sum_t(numer):  # порядковий номер елемента
+    if numer == 0:
+        return 0
+    res = 0
+    i = numer - 1
+    while i > -1:
+        # print('index=', i)
+        res += T[i]
+        i = (i & (i + 1)) - 1
+    return res
+
+
+def add_d(i, d, n):  # d прирощення елемента з індексом i
+    while i < n:
+        T[i] += d
+        i = (i | (i + 1))
+
+
+for i in range(0, m):
+    if i in most_bottom_figures:
+        shadowed_cells += sum_t(most_bottom_figures[i])
+        for el in most_left_figures_list[i]:
+            add_d(el, 1, n - 1)
+
 set1 = {(key, value) for key, value in most_left_figures.items()}
 set2 = {(key, value) for value, key in most_bottom_figures.items()}
-
-sum -= len(set1.union(set2))
-print(sum)
+print(m * n - 1 - shadowed_cells - len(set1.union(set2)))
