@@ -7,27 +7,29 @@
 # тут є задачі 2014-15 н.р. ІІ, ІІІ етапів, умова і розвʼязок,
 # крім D, E першого дня, але і для них є підказки
 
-# 78% - обмеження за часом
+# 100% - обмеження за часом
 n = int(input())
-a=[input() for i in range(n)]
+a = [input() for i in range(n)]
+
 
 def countwords(a):
-    count=0
+    count = 0
     for row in a:
-        tracked=True
-        for s in range(1,n) :
-            if row[s]=='-' and row[s-1]=='-'and tracked:
-                count+=1
-                tracked=False
-            if row[s]=='#':
-                tracked=True
+        tracked = True
+        for s in range(1, n):
+            if tracked and row[s] == '-' and row[s - 1] == '-':
+                count += 1
+                tracked = False
+            if row[s] == '#':
+                tracked = True
     return count
 
-ac=[[]for i in range(n)]
-for i in range(n):
-    for j in range(n):
-        ac[i].append(a[j][i])
+
+ac = [[a[j][i] for j in range(n)] for i in range(n)]
+# без list comprehension втрачається 22%
+# for i in range(n):
+#     for j in range(n):
+#         ac[i].append(a[j][i])
 
 
-
-print (countwords(a),countwords(ac))
+print(countwords(a), countwords(ac))
