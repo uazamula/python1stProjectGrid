@@ -3,8 +3,8 @@ from random import *
 from time import *
 
 root = Tk()
-root.geometry('400x600')
-root.option_add('*Font', 'Arial 28')
+root.geometry('500x700')
+root.option_add('*Font', 'Arial 40')
 N = 5
 i = 0
 counttime = 0
